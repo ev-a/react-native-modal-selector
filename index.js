@@ -11,6 +11,7 @@ import {
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  StyleSheet,
 } from "react-native";
 
 import styles from "./style";
@@ -343,7 +344,7 @@ export default class ModalSelector extends React.Component {
 
     let Overlay = View;
     let overlayProps = {
-      style: { flex: 1 },
+      style: StyleSheet.absoluteFillObject,
     };
     // Some RN versions have a bug here, so making the property opt-in works around this problem
     if (backdropPressToClose) {
@@ -359,6 +360,9 @@ export default class ModalSelector extends React.Component {
     if (scrollViewPassThruProps && scrollViewPassThruProps.horizontal) {
       optionsContainerStyle.flexDirection = "row";
     }
+
+    const { style: scrollViewStyle, ...restScrollViewPassThruProps } =
+      scrollViewPassThruProps || {};
 
     return (
       <Overlay {...overlayProps}>
@@ -377,10 +381,11 @@ export default class ModalSelector extends React.Component {
               />
             ) : (
               <ScrollView
+                style={[{ flexGrow: 0, flexShrink: 1 }, scrollViewStyle]}
                 keyboardShouldPersistTaps={keyboardShouldPersistTaps}
                 accessible={scrollViewAccessible}
                 accessibilityLabel={scrollViewAccessibilityLabel}
-                {...scrollViewPassThruProps}
+                {...restScrollViewPassThruProps}
               >
                 <View style={optionsContainerStyle}>{options}</View>
               </ScrollView>
